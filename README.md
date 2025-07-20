@@ -2,7 +2,7 @@
 
 A comprehensive system for generating organic gemstones with metallic engravings and rendering them with professional quality materials and lighting.
 
-![OpenStone Showcase](examples/realistic_rock_showcase.png)
+![OpenStone Cinematic Geode](examples/cinematic_geode_showcase.png)
 
 ## Overview
 
