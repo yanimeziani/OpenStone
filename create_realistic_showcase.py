@@ -358,14 +358,14 @@ class NaturalLightingSetup(BaseLightingSetup):
         }
 
 
-class NaturalWorldEnvironment(BaseWorldEnvironment):
-    """Natural world environment for realistic showcase"""
+class TransparentWorldEnvironment(BaseWorldEnvironment):
+    """Transparent world environment for showcase with transparent background"""
     
     def setup_world(self, world_data: dict):
-        """Set up natural world environment"""
+        """Set up transparent world environment"""
         world = bpy.context.scene.world
         if world is None:
-            world = bpy.data.worlds.new("NaturalWorld")
+            world = bpy.data.worlds.new("TransparentWorld")
             bpy.context.scene.world = world
         
         world.use_nodes = True
@@ -374,27 +374,20 @@ class NaturalWorldEnvironment(BaseWorldEnvironment):
         
         nodes.clear()
         
-        # Use sky texture for realistic environment
-        sky_texture = nodes.new(type='ShaderNodeTexSky')
-        sky_texture.location = (-400, 300)
-        sky_texture.sky_type = 'NISHITA'
-        sky_texture.sun_elevation = math.radians(world_data.get('sun_elevation', 35))
-        sky_texture.sun_rotation = math.radians(world_data.get('sun_rotation', 25))
-        
-        # Background shader
+        # Transparent background shader
         background = nodes.new(type='ShaderNodeBackground')
         background.location = (-200, 300)
-        background.inputs['Strength'].default_value = world_data.get('sky_strength', 0.8)
+        background.inputs['Color'].default_value = (0, 0, 0, 0)  # Transparent
+        background.inputs['Strength'].default_value = 0.0
         
         # Output
         output = nodes.new(type='ShaderNodeOutputWorld')
         output.location = (0, 300)
         
         # Link everything
-        links.new(sky_texture.outputs['Color'], background.inputs['Color'])
         links.new(background.outputs['Background'], output.inputs['Surface'])
         
-        print("🌍 Natural world environment complete")
+        print("🌍 Transparent world environment complete")
     
     def get_default_params(self) -> dict:
         return {
@@ -419,7 +412,7 @@ def create_realistic_showcase():
     mesh_creator.register_generator('realistic_rock', RealisticRockGenerator())
     material_manager.register_style('realistic_rock', RealisticRockMaterial())
     lighting_manager.register_lighting_setup('natural', NaturalLightingSetup())
-    lighting_manager.register_world_environment('natural', NaturalWorldEnvironment())
+    lighting_manager.register_world_environment('transparent', TransparentWorldEnvironment())
     
     # Create realistic rock specification
     gem_data = {
@@ -452,10 +445,7 @@ def create_realistic_showcase():
             'fill_energy': 10
         },
         'world': {
-            'environment': 'natural',
-            'sun_elevation': 40,
-            'sun_rotation': 30,
-            'sky_strength': 1.0
+            'environment': 'transparent'
         },
         'render_settings': {
             'samples': 256,
@@ -526,25 +516,23 @@ def create_realistic_showcase():
 
 
 def setup_rock_camera():
-    """Set up camera for rock showcase"""
+    """Set up camera for rock showcase - properly framed"""
     # Remove existing cameras
     cameras = [obj for obj in bpy.context.scene.objects if obj.type == 'CAMERA']
     for cam in cameras:
         bpy.data.objects.remove(cam, do_unlink=True)
     
-    # Create camera positioned to show rock detail
-    bpy.ops.object.camera_add(location=(3.5, -4.2, 2.8))
+    # Create camera positioned to fully frame the rock
+    bpy.ops.object.camera_add(location=(4.0, -4.0, 3.0))
     camera = bpy.context.active_object
     camera.name = "RockCamera"
     
-    # Angle to show surface detail and form
-    camera.rotation_euler = (math.radians(65), 0, math.radians(35))
+    # Angle to show surface detail and ensure full framing
+    camera.rotation_euler = (math.radians(60), 0, math.radians(40))
     
-    # Camera settings for rock detail
-    camera.data.lens = 50
-    camera.data.dof.use_dof = True
-    camera.data.dof.focus_distance = 5.5
-    camera.data.dof.aperture_fstop = 5.6  # Good depth of field for detail
+    # Camera settings for proper framing and detail
+    camera.data.lens = 70  # Slightly longer lens for better framing
+    camera.data.dof.use_dof = False  # Disable DOF for full focus showcase
     
     bpy.context.scene.camera = camera
 
@@ -578,10 +566,13 @@ def setup_realistic_render(render_settings: dict):
     scene.cycles.dicing_rate = 1.0
     scene.cycles.max_subdivisions = 12
     
-    # Output settings
+    # Output settings for transparent PNG
     scene.render.image_settings.file_format = 'PNG'
-    scene.render.image_settings.color_mode = 'RGB'
+    scene.render.image_settings.color_mode = 'RGBA'  # Enable alpha channel for transparency
     scene.render.image_settings.compression = 90
+    
+    # Enable transparency
+    scene.render.film_transparent = True
 
 
 if __name__ == "__main__":
