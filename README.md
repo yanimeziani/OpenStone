@@ -2,7 +2,7 @@
 
 A comprehensive system for generating organic gemstones with metallic engravings and rendering them with professional quality materials and lighting.
 
-![Example Crystal Render](examples/example_crystal.png)
+![OpenStone Showcase](examples/github_showcase.png)
 
 ## Overview
 
@@ -44,20 +44,20 @@ This repository provides tools for:
 
 5. **Run the demo:**
    ```bash
-   python run_gem_creator.py
+   python openstone_main.py generate "A mystical blue crystal with golden infinity symbol"
    ```
 
 ## Usage Examples
 
 ### Basic Usage
 ```bash
-python run_gem_creator.py
+python openstone_main.py generate "A fiery red ruby with silver dragon engravings"
 ```
-This runs the demo with a predefined prompt: "A mystical blue crystal with golden infinity symbol"
 
-### Custom Gem Generation
+### Custom Gem Generation with Fallback
 ```bash
-python ai_gem_generator.py "A fiery red ruby with silver dragon engravings"
+# Works with or without OpenAI API
+python openstone_main.py generate "A mystical emerald with golden phoenix patterns"
 ```
 
 ### Using the Modular System
@@ -72,10 +72,13 @@ python openstone_main.py create examples/gem_spec.json
 python openstone_main.py list
 ```
 
-### Create Cinematic Renders
+### Create Stunning Renders
 ```bash
 # Create a dramatic cinematic render
 python create_cinematic_render.py
+
+# Create a GitHub showcase render
+python create_github_example.py
 ```
 
 ## File Structure
@@ -92,12 +95,10 @@ openstone/
 │   ├── custom_mesh_example.py      # How to create custom mesh generators
 │   ├── custom_material_example.py  # How to create custom materials
 │   ├── custom_lighting_example.py  # How to create custom lighting
-│   └── example_crystal.png         # Example render output
+│   └── github_showcase.png         # Showcase render output
 ├── openstone_main.py          # Main CLI interface for modular system
 ├── create_cinematic_render.py  # Cinematic render creation script
-├── ai_gem_generator.py        # Legacy AI generator (standalone)
-├── blender_gem_creator.py     # Legacy Blender script
-├── run_gem_creator.py         # Legacy demo script
+├── create_github_example.py    # GitHub showcase render generator
 ├── requirements.txt           # Python dependencies
 ├── .gitignore                 # Git ignore rules
 ├── README.md                  # This documentation
