@@ -1,0 +1,9 @@
+# OpenStone Dependencies
+# Core Python packages (most are built-in)
+# pathlib, json, os, sys, subprocess, math, random, colorsys, typing are built-in
+
+# External dependencies
+openai>=1.0.0  # For AI-powered gem generation (optional)
+
+# Note: Blender-specific modules (bpy, bmesh, mathutils) are only available
+# when running within Blender's Python environment

@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
 """
-AI Gemstone Generator
-Generates unique gemstone specifications using OpenAI API
+AI Gemstone Generator Module
+Generates unique gemstone specifications using OpenAI API or fallback methods
 """
 
 import json
 import os
-import sys
 import random
 from pathlib import Path
 from typing import Dict, Any, Optional
@@ -18,11 +17,21 @@ try:
 except ImportError:
     OPENAI_AVAILABLE = False
 
+
 class AIGemGenerator:
     """AI-powered gemstone specification generator"""
     
-    def __init__(self, openai_api_key: Optional[str] = None):
-        self.output_dir = Path.home() / "Desktop" / "PRISMATICS" / "crystal" / "generated_gems"
+    def __init__(self, openai_api_key: Optional[str] = None, output_dir: Optional[Path] = None):
+        """Initialize the AI gem generator
+        
+        Args:
+            openai_api_key: Optional OpenAI API key
+            output_dir: Optional output directory for generated JSON files
+        """
+        if output_dir:
+            self.output_dir = Path(output_dir)
+        else:
+            self.output_dir = Path.home() / "Desktop" / "PRISMATICS" / "crystal" / "generated_gems"
         self.output_dir.mkdir(parents=True, exist_ok=True)
         
         # Initialize OpenAI if available
@@ -50,93 +59,41 @@ class AIGemGenerator:
 Generate a complete gemstone specification in JSON format based on the user's description. The JSON MUST include ALL of these fields:
 
 {
-  "name": "UniqueGemName",
+  "name": "GemName",
   "description": "Detailed description",
-  "gem_type": "crystal/ruby/emerald/sapphire/diamond/amethyst/quartz/obsidian/granite/marble",
-  "base_shape": "sphere/icosphere/cube/faceted/organic/crystal/pebble/loop",
+  "gem_type": "crystal|ruby|emerald|sapphire|diamond|amethyst",
+  "base_shape": "organic_crystal|cut_crystal|raw_crystal",
   "geometry": {
-    "subdivisions": 5-10,
-    "scale": [1.0, 1.0, 1.0],
-    "rotation": [0.0, 0.0, 0.0],
-    "organic_modifiers": ["subdivision_surface", "displace", "bevel", "smooth"],
-    "displacement": {"strength": 0.1-0.5, "scale": 2.0-5.0, "detail": 0.1-0.3},
-    "subdivision_surface": {"levels": 2-4, "render_levels": 4-6},
-    "bevel": {"width": 0.02-0.08, "segments": 3-8},
-    "smooth": {"factor": 0.5-1.0, "iterations": 2-5}
+    "crystal_faces": 6-16,
+    "irregularity": 0.1-0.5,
+    "surface_detail": 0.3-1.0,
+    "scale": [x, y, z] (0.5-2.0 range)
   },
   "material": {
-    "base_color": [r, g, b, 1.0],
-    "secondary_color": [r, g, b, 1.0],
-    "ior": 1.4-1.8,
-    "roughness": 0.01-0.05,
-    "transmission": 0.5-0.95,
-    "subsurface": 0.3-0.8,
-    "subsurface_radius": [r, g, b],
-    "emission_strength": 0.0-15.0,
-    "emission_color": [r, g, b, 1.0],
-    "surface_imperfections": {
-      "scratches": 0.02-0.1,
-      "bumps": 0.05-0.2,
-      "noise_scale": 15.0-50.0,
-      "roughness_variation": 0.01-0.05,
-      "fracture_strength": 0.1-0.4,
-      "weathering_intensity": 0.3-0.8,
-      "erosion_depth": 0.05-0.15,
-      "strata_visibility": 0.2-0.6
-    },
-    "internal_structure": {
-      "inclusions": 0.1-0.4,
-      "fractures": 0.05-0.15,
-      "crystal_growth": 0.3-0.7,
-      "mineral_veins": 0.2-0.5,
-      "geological_layers": 0.3-0.8,
-      "crystal_clusters": 0.1-0.4
-    },
-    "mesh_gradients": {
-      "primary_scale": 15.0-25.0,
-      "secondary_scale": 25.0-35.0,
-      "voronoi_scale": 20.0-30.0,
-      "wave_scale": 18.0-28.0,
-      "color_variation": 0.6-0.9,
-      "gradient_intensity": 0.7-0.95
-    }
+    "base_color": [r, g, b] (0.0-1.0),
+    "transparency": 0.0-0.5,
+    "roughness": 0.01-0.2,
+    "ior": 1.3-2.4,
+    "subsurface_scattering": 0.0-0.5,
+    "dispersion": 0.01-0.1
   },
   "engraving": {
-    "enabled": true/false,
-    "metal_type": "gold/silver/platinum/bronze/copper",
-    "pattern": "dragon/phoenix/celtic/mandala/runes/geometric/mystical/infinity/spiral/star/floral",
-    "depth": 0.02-0.04,
-    "width": 0.05-0.12,
-    "position": [x, y, z],
-    "rotation": [x, y, z],
-    "contrast": 0.7-0.95,
-    "bump_strength": 0.1-0.3
+    "pattern": "infinity|mystical|geometric|organic|spiral|star|floral|dragon|phoenix|celtic|mandala|runes",
+    "metal_type": "gold|silver|platinum|copper|bronze",
+    "depth": 0.01-0.1,
+    "width": 0.005-0.05,
+    "metallic": 0.8-1.0,
+    "roughness": 0.1-0.5
   },
   "lighting": {
-    "world_strength": 0.8-1.5,
-    "background_color": [r, g, b, 1.0],
-    "key_light": {"strength": 2.0-4.0, "color": [r, g, b, 1.0], "position": [x, y, z]},
-    "fill_light": {"strength": 0.5-1.5, "color": [r, g, b, 1.0], "position": [x, y, z]},
-    "rim_light": {"strength": 1.0-2.5, "color": [r, g, b, 1.0], "position": [x, y, z]},
-    "back_light": {"strength": 0.8-2.0, "color": [r, g, b, 1.0], "position": [x, y, z]}
-  },
-  "camera": {
-    "position": [x, y, z],
-    "rotation": [x, y, z],
-    "lens": 50.0-85.0,
-    "f_stop": 2.8-5.6,
-    "focus_distance": 3.0-8.0
+    "hdri_strength": 0.5-3.0,
+    "key_light_energy": 5-20,
+    "fill_light_energy": 2-8,
+    "rim_light_energy": 3-15
   },
   "render_settings": {
-    "resolution_x": 1920,
-    "resolution_y": 1080,
-    "samples": 1024,
-    "max_bounces": 16,
-    "use_denoising": true,
-    "denoiser": "OPENIMAGEDENOISE",
-    "use_gpu_acceleration": true,
-    "file_format": "PNG",
-    "color_depth": "16",
+    "samples": 128-512,
+    "resolution": [1920, 1080],
     "exposure": 0.4-0.8,
     "gamma": 1.0-1.2,
     "saturation": 1.2-1.6,
@@ -217,7 +174,7 @@ Make the gemstone unique and beautiful based on the description."""
         
         # Generate fallback gem data
         return {
-            "name": f"Demo_{gem_type.title()}",
+            "name": f"Generated_{gem_type.title()}",
             "description": f"A beautiful {gem_type} crystal with intricate {pattern} engravings",
             "gem_type": gem_type,
             "base_shape": "organic_crystal",
@@ -264,9 +221,18 @@ Make the gemstone unique and beautiful based on the description."""
         }
     
     def generate_gem_json(self, prompt: str, use_ai: bool = True) -> Dict[str, Any]:
-        """Generate gemstone JSON specification"""
+        """Generate gemstone JSON specification
+        
+        Args:
+            prompt: Text description of the desired gemstone
+            use_ai: Whether to use AI generation (falls back if unavailable)
+            
+        Returns:
+            Dictionary containing complete gemstone specification
+        """
         if not use_ai or not self.openai_available:
-            print("⚠️ OpenAI not available, using fallback generation")
+            if self.openai_available and use_ai:
+                print("⚠️ OpenAI requested but not available, using fallback generation")
             return self.generate_fallback_gem(prompt)
         
         try:
@@ -286,10 +252,19 @@ Make the gemstone unique and beautiful based on the description."""
             
         except Exception as e:
             print(f"❌ AI generation failed: {e}")
-            raise RuntimeError(f"Failed to generate gemstone: {e}")
+            print("🔄 Falling back to local generation")
+            return self.generate_fallback_gem(prompt)
     
     def save_gem_json(self, gem_data: Dict[str, Any], filename: Optional[str] = None) -> str:
-        """Save gemstone JSON to file"""
+        """Save gemstone JSON to file
+        
+        Args:
+            gem_data: Gemstone specification dictionary
+            filename: Optional custom filename
+            
+        Returns:
+            Path to the saved JSON file
+        """
         if filename is None:
             filename = f"{gem_data['name']}.json"
         
@@ -300,36 +275,15 @@ Make the gemstone unique and beautiful based on the description."""
         print(f"✅ JSON saved to: {filepath}")
         return str(filepath)
 
-def main():
-    """Main function"""
-    if len(sys.argv) < 2:
-        print("Usage: python ai_gem_generator.py <prompt>")
-        print("Examples:")
-        print("  python ai_gem_generator.py 'A mystical blue crystal with golden infinity symbol'")
-        print("  python ai_gem_generator.py 'Deep red ruby with silver geometric patterns'")
-        sys.exit(1)
-    
-    prompt = " ".join(sys.argv[1:])
-    
-    generator = AIGemGenerator()
-    
-    try:
-        # Generate gemstone specification
-        gem_data = generator.generate_gem_json(prompt)
+    def load_gem_json(self, filepath: str) -> Dict[str, Any]:
+        """Load gemstone JSON from file
         
-        # Save to file
-        json_file = generator.save_gem_json(gem_data)
-        
-        print(f"🎉 Generated gemstone: {gem_data.get('name', 'Unknown')}")
-        print(f"📁 JSON file: {json_file}")
-        print(f"💎 Gem type: {gem_data.get('gem_type', 'unknown')}")
-        print(f"🔷 Base shape: {gem_data.get('base_shape', 'unknown')}")
-        engraving = gem_data.get('engraving', {})
-        print(f"🏆 Engraving: {engraving.get('pattern', 'none')} ({engraving.get('metal_type', 'none')})")
-        
-    except Exception as e:
-        print(f"❌ Error: {e}")
-        sys.exit(1)
-
-if __name__ == "__main__":
-    main() 
+        Args:
+            filepath: Path to the JSON file
+            
+        Returns:
+            Dictionary containing gemstone specification
+        """
+        with open(filepath, 'r') as f:
+            gem_data = json.load(f)
+        return gem_data

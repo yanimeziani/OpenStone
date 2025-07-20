@@ -26,7 +26,7 @@ Thank you for your interest in contributing to OpenStone! We welcome contributio
 - Be responsive to feedback and requested changes.
 
 ## Reporting Issues
-- Use the [GitHub Issues](https://github.com/yourusername/openstone/issues) page to report bugs or request features.
+- Use the [GitHub Issues](https://github.com/yanimeziani/openstone/issues) page to report bugs or request features.
 - Provide as much detail as possible, including steps to reproduce, expected behavior, and screenshots if helpful.
 
 ## Community Standards
@@ -34,6 +34,6 @@ Thank you for your interest in contributing to OpenStone! We welcome contributio
 - Follow the [Contributor Covenant Code of Conduct](https://www.contributor-covenant.org/version/2/0/code_of_conduct/).
 
 ## Contact
-For questions or support, open an issue or contact the maintainer at your.email@example.com.
+For questions or support, open an issue or contact the maintainer at mezianiyani0@gmail.com.
 
 Thank you for helping make OpenStone better! 
