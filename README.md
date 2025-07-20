@@ -2,7 +2,7 @@
 
 A comprehensive system for generating organic gemstones with metallic engravings and rendering them with professional quality materials and lighting.
 
-![OpenStone Showcase](examples/premium_showcase.png)
+![OpenStone Showcase](examples/realistic_rock_showcase.png)
 
 ## Overview
 
