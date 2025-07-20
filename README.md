@@ -2,7 +2,7 @@
 
 A comprehensive system for generating organic gemstones with metallic engravings and rendering them with professional quality materials and lighting.
 
-![OpenStone Showcase](examples/github_showcase.png)
+![OpenStone Showcase](examples/premium_showcase.png)
 
 ## Overview
 
@@ -77,8 +77,8 @@ python openstone_main.py list
 # Create a dramatic cinematic render
 python create_cinematic_render.py
 
-# Create a GitHub showcase render
-python create_github_example.py
+# Create a premium showcase render
+python create_premium_showcase.py
 ```
 
 ## File Structure
@@ -95,10 +95,10 @@ openstone/
 │   ├── custom_mesh_example.py      # How to create custom mesh generators
 │   ├── custom_material_example.py  # How to create custom materials
 │   ├── custom_lighting_example.py  # How to create custom lighting
-│   └── github_showcase.png         # Showcase render output
+│   └── premium_showcase.png        # Premium showcase render output
 ├── openstone_main.py          # Main CLI interface for modular system
 ├── create_cinematic_render.py  # Cinematic render creation script
-├── create_github_example.py    # GitHub showcase render generator
+├── create_premium_showcase.py  # Premium showcase render generator
 ├── requirements.txt           # Python dependencies
 ├── .gitignore                 # Git ignore rules
 ├── README.md                  # This documentation
