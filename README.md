@@ -246,3 +246,4 @@ Contributions are welcome! Please feel free to submit pull requests or open issu
 - Blender Foundation for the amazing 3D software
 - Cycles render engine for photorealistic rendering
 - The Blender Python API for automation capabilities # OpenStones
+# OpenStones
